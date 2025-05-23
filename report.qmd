@@ -1,0 +1,60 @@
+---
+title: "Education & Career Success"
+author: "Tran Dang Huy, Sia Chawla Chawla, Jiaqi Xu"
+
+editor: source
+embed-resources: true
+
+
+# set report format 
+format:
+  pdf:
+    toc: true
+    theme: journal
+    margin-top: 20mm
+    margin-bottom: 25mm
+    margin-left: 25mm
+    margin-right: 25mm
+
+# code chunk and result settings, globally, (method 1)
+execute: 
+  echo: false      # hide code chunk
+  eval: true       # run the code
+  include: true    # show output
+  cache: false     
+  warning: false
+  message: false
+  fig-align: "center"   # plot's position: left, center, or right
+  fig-width: 6          # plot's width
+  fig-height: 4         # plot's height
+  out-width: "65%"      # % width of inserted image
+
+# allow sectioning
+number-sections: true
+section-divs: true
+section-depth: 3
+---
+
+
+# Executive summary {#sec-summary}
+(Maximum of 4 sentences)
+
+
+# Introduction {#sec-intro}
+(Maximum 10 sentences)
+
+
+# Methodology {#sec-method}
+(Maximum 300 words; Should include a figure and a table and those must be referenced in the text and have adequate captions)
+
+
+# Results {#sec-result}
+(Maximum 200 words. Should include either a figure or a table.)
+
+
+# Discussion, conclusion and recommendations {#sec-discuss}
+
+
+# Reference section {#sec-ref}
+(Include at least 1 reference.)
+ 
