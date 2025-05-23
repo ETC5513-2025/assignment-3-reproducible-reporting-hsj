@@ -39,6 +39,8 @@ section-depth: 3
 ```{r}
 library(knitr)
 library(tidyverse)
+library(randomForest)
+library(rsample)
 ```
 
 
@@ -64,6 +66,22 @@ To answer these questions, we use data from 5,000 recent graduates. This data in
 data <- read.csv("data/education_career_success.csv")
 ```
 
+```{r}
+sapply(data, n_distinct)
+```
+
+```{r}
+# inspect dataset
+glimpse(data)
+
+# convert text liked variable into categorical variable
+data <- data %>%
+  mutate(across(where(is.character), as.factor))
+```
+
+```{r}
+names(data)
+```
 
 # Results {#sec-result}
 (Maximum 200 words. Should include either a figure or a table.)
