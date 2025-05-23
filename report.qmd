@@ -50,6 +50,12 @@ library(tidyverse)
 (Maximum 10 sentences)
 
 
+Graduates today face many questions about how their experiences influence their careers. Grades alone may not determine who gets the best job opportunities or feels happiest at work. This report explores two main questions: Which student experiences are linked to receiving more job offers? And what makes graduates feel satisfied with their careers and achieve a good work-life balance?
+
+To answer these questions, we use data from 5,000 recent graduates. This data includes information about their personal characteristics, grades, internships, certifications, and soft skills, as well as their self-rated career satisfaction and work-life balance. We do not test specific theories but instead look openly for patterns. Our analysis will highlight which experiences seem connected to better career outcomes, as these may help students and educators see how different experiences could affect career paths.
+
+
+
 # Methodology {#sec-method}
 (Maximum 300 words; Should include a figure and a table and those must be referenced in the text and have adequate captions)
 
