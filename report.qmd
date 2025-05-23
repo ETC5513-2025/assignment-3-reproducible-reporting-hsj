@@ -36,6 +36,12 @@ section-depth: 3
 ---
 
 
+```{r}
+library(knitr)
+library(tidyverse)
+```
+
+
 # Executive summary {#sec-summary}
 (Maximum of 4 sentences)
 
@@ -46,6 +52,11 @@ section-depth: 3
 
 # Methodology {#sec-method}
 (Maximum 300 words; Should include a figure and a table and those must be referenced in the text and have adequate captions)
+
+
+```{r}
+data <- read.csv("data/education_career_success.csv")
+```
 
 
 # Results {#sec-result}
