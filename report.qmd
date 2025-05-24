@@ -35,7 +35,6 @@ section-divs: true
 section-depth: 3
 ---
 
-
 ```{r}
 library(knitr)
 library(tidyverse)
@@ -47,23 +46,21 @@ library(MASS)
 library(broom)  
 ```
 
-
 # Executive summary {#sec-summary}
+
 (Maximum of 4 sentences)
 
-
 # Introduction {#sec-intro}
-(Maximum 10 sentences)
 
+(Maximum 10 sentences)
 
 Graduates today face many questions about how their experiences influence their careers. Grades alone may not determine who gets the best job opportunities or feels happiest at work. This report explores two main questions: Which student experiences are linked to receiving more job offers? And what makes graduates feel satisfied with their careers and achieve a good work-life balance?
 
 To answer these questions, we use a dataset of 5,000 recent graduates from Kaggle. It includes information about students’ academic background, personal demographic, and career-related outcomes. Rather than testing predefined theories, this project takes an open-ended, pattern-oriented approach. The aim is to explore which types of experiences appear most consistently linked to job outcomes and personal satisfaction.
 
-
 # Methodology {#sec-method}
-(Maximum 300 words; Should include a figure and a table and those must be referenced in the text and have adequate captions)
 
+(Maximum 300 words; Should include a figure and a table and those must be referenced in the text and have adequate captions)
 
 This study uses an exploratory approach to investigate how students’ academic and experiential attributes may relate to early career outcomes. The dataset includes 5,000 graduate records collected from Kaggle.
 
@@ -119,9 +116,8 @@ data %>%
 
 Given that `Job_Offers` is a count variable, we selected random forest regression, a non-parametric model capable of capturing complex relationships without strong distributional assumptions. For the ordinal outcomes, `Career_Satisfaction` and `Work_Life_Balance`, we applied ordinal logistic regression to model the ordered nature of the response while preserving interpretability.
 
-
-
 # Results {#sec-result}
+
 (Maximum 200 words. Should include either a figure or a table.)
 
 ## Random Forest for Number of Job Offers {#sec-r}
@@ -168,7 +164,27 @@ ggplot(rf_top10, aes(x = reorder(Variable, !!sym(imp_col)), y = !!sym(imp_col)))
 
 @fig-rfimportance shows the relative importance of predictors in the random forest model. Variables such as Internships_Completed, Certifications, and Years_to_Promotion were among the most influential in predicting job offers. Negative importance scores (e.g., for Age) suggest minimal or noisy contributions to model performance.
 
+## How to get permutation importance
 
+The permutation importance test result is the same as asking the question "How much worse does my model perform if I destroy just this one variable"
+
+So in a simple way, using the value from random forest model, the permutation importance was calculated by randomly shuffle the value of a variable in the tree and record its out-of-bag error, then calculate the different in out-of-bag error between the permutated value and the original value in percentage. Repeat this calculating for all the variables, we now get the permutation importance table @fig-rfimportance that shows the relative importance of predictors in the random forest model.
+
+## What permutation importance say about the effect of variable to the number of job offers that student can get
+
+If permutated a variable cause the error to jumps up -\> that variable has large positive importance.
+
+If permutated a variable makes no difference -\> importance of that variable ≈ 0.
+
+If permutated a variable lowers the error instead -\> that variable has negative importance.
+
+## Interpretation:
+
+By looking at the @fig-rfimportance created by Jackie, we could see that:
+
+The amount of internship and projects you complete before, your SAT score and Gender are some very strong predictors. High school and university GPA are slightly important variable while certification, networking score, what field did you study and age are just neutral since they did not help or hurt the prediction in anyway.
+
+On the other hand, university ranking, sort skills score, current job level, starting salary, year to promotion and entrepreneurship variables are very bad predictors that are just not relevant to the job offers you may get.
 
 ## Ordinal Logistic regression for career satisfaction
 
@@ -190,7 +206,6 @@ olr_data <- data %>%
 olr_model <- polr(form, data = olr_data, Hess = TRUE)
 ```
 
-
 ```{r}
 olr_imp <- tidy(olr_model) %>%
   filter(!str_detect(term, "\\|")) %>%
@@ -209,10 +224,8 @@ ggplot(olr_imp, aes(x = reorder(term, AbsCoef), y = AbsCoef)) +
   )
 ```
 
-
 # Discussion, conclusion and recommendations {#sec-discuss}
 
-
 # Reference section {#sec-ref}
+
 (Include at least 1 reference.)
- 
