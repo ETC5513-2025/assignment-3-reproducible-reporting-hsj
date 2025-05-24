@@ -41,10 +41,8 @@ library(knitr)
 library(tidyverse)
 library(randomForest)
 library(rsample)
-library(e1071)
-library(patchwork)
-library(MASS)    
-library(broom)  
+library(rpart)
+library(rpart.plot)
 ```
 
 
@@ -56,7 +54,7 @@ library(broom)
 (Maximum 10 sentences)
 
 
-Graduates today face many questions about how their experiences influence their careers. Grades alone may not determine who gets the best job opportunities or feels happiest at work. This report explores two main questions: Which student experiences are linked to receiving more job offers? And what makes graduates feel satisfied with their careers and achieve a good work-life balance?
+Graduates today face many questions about how their experiences influence their careers. Grades alone may not determine who gets the most job opportunities. This report explores which student experiences are linked to receiving more job offers?
 
 To answer these questions, we use a dataset of 5,000 recent graduates from Kaggle. It includes information about students’ academic background, personal demographic, and career-related outcomes. Rather than testing predefined theories, this project takes an open-ended, pattern-oriented approach. The aim is to explore which types of experiences appear most consistently linked to job outcomes and personal satisfaction.
 
@@ -74,6 +72,7 @@ data <- read.csv("data/education_career_success.csv")
 ```{r}
 # convert text liked variable into categorical variable
 data <- data %>%
+  dplyr::filter(Gender %in% c("Male", "Female")) %>%
   mutate(across(where(is.character), as.factor))
 
 # convert ordinal variable to ordered factor 
@@ -97,18 +96,14 @@ data %>% glimpse()
 
 We began by examining the structure of the input variables. As shown in @tbl-data, the dataset contains a mix of continuous (e.g., `SAT_Score`), ordinal (e.g., `Certifications`), and categorical (e.g., `Field_of_Study`) features, with a wide range of unique values. This diversity limits the applicability of simple linear models and supports the use of flexible methods that can accommodate mixed data types and non-linear relationships.
 
-We also analysed the outcome variables: `Job_Offers`, `Career_Satisfaction`, and `Work_Life_Balance.` As visualised in @fig-outcomeskew, all three outcomes are relatively well-distributed and show minimal skewness.
+We also analysed the outcome variable. As visualised in @fig-outcomeskew, variable `Job_Offers` is relatively well-distributed and show minimal skewness.
 
 ```{r}
 #| label: fig-outcomeskew
-#| fig-cap: "Distributions of Outcome Variables"
+#| fig-cap: "Distributions of Outcome Variable"
 
 data %>%
-  mutate(
-    Career_Satisfaction = as.numeric(as.character(Career_Satisfaction)),
-    Work_Life_Balance = as.numeric(as.character(Work_Life_Balance))
-  ) %>%
-  dplyr::select(Job_Offers, Career_Satisfaction, Work_Life_Balance) %>%
+  dplyr::select(Job_Offers) %>%
   pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value") %>%
   ggplot(aes(x = Value)) +
   geom_histogram(binwidth = 1, fill = "steelblue", color = "white") +
@@ -117,14 +112,14 @@ data %>%
   labs(x = "Value", y = "Count")
 ```
 
-Given that `Job_Offers` is a count variable, we selected random forest regression, a non-parametric model capable of capturing complex relationships without strong distributional assumptions. For the ordinal outcomes, `Career_Satisfaction` and `Work_Life_Balance`, we applied ordinal logistic regression to model the ordered nature of the response while preserving interpretability.
+Given that `Job_Offers` is a count variable, we select random forest model, a non-parametric model capable of capturing complex relationships without strong distributional assumptions. 
 
 
 
 # Results {#sec-result}
 (Maximum 200 words. Should include either a figure or a table.)
 
-## Random Forest for Number of Job Offers {#sec-r}
+## Get the most important variables for Job_Offers {#sec-rfx}
 
 ```{r}
 
@@ -146,68 +141,38 @@ rf_model <- randomForest(form, data = data, importance = TRUE)
 #| label: fig-rfimportance
 #| fig-cap: "Importance of Predictors for Number of Job Offers Received"
 
-rf_imp <- importance(rf_model, type = 1)
-rf_imp_df <- as.data.frame(rf_imp) %>%
-  rownames_to_column("Variable")
+rf_imp_df <- importance(rf_model, type = 1) %>%
+  as.data.frame() %>%
+  rownames_to_column("Variable") %>%
+  rename(Importance = `%IncMSE`) %>%  
+  arrange(desc(across(where(is.numeric))))
 
-imp_col <- setdiff(colnames(rf_imp_df), "Variable")[[1]]  
-
-rf_top10 <- rf_imp_df %>%
-  arrange(desc(!!sym(imp_col)))
-
-ggplot(rf_top10, aes(x = reorder(Variable, !!sym(imp_col)), y = !!sym(imp_col))) +
+ggplot(rf_imp_df, aes(x = reorder(Variable, Importance), y = Importance)) +
   geom_col(fill = "steelblue") +
   coord_flip() +
   theme_minimal() +
   labs(
-    title = "Importance of Predictors for Job Offers",
     x = "Predictor",
-    y = imp_col
+    y = "% Increase in Accuracy"
   )
 ```
 
-@fig-rfimportance shows the relative importance of predictors in the random forest model. Variables such as Internships_Completed, Certifications, and Years_to_Promotion were among the most influential in predicting job offers. Negative importance scores (e.g., for Age) suggest minimal or noisy contributions to model performance.
-
-
-
-## Ordinal Logistic regression for career satisfaction
-
-```{r}
-
-outcome_var <- "Career_Satisfaction"
-
-predictors <- data %>%
-  dplyr::select(-Student_ID, -Job_Offers, -Work_Life_Balance) %>%
-  dplyr::select(-all_of(outcome_var)) %>%
-  names()
-
-form <- as.formula(paste(outcome_var, "~", paste(predictors, collapse = " + ")))
-
-olr_data <- data %>%
-  dplyr::select(all_of(c(outcome_var, predictors))) %>%
-  filter(if_all(everything(), ~ !is.na(.) & is.finite(.)))
-
-olr_model <- polr(form, data = olr_data, Hess = TRUE)
-```
+@fig-rfimportance shows the relative importance of predictors in the random forest model. Variables such as number of complete internships and projects, SAT score, and gender were most associated with the number of job offers receiving by the student. Negative importance scores (e.g., for Age) suggest minimal or noisy contributions to model performance.
 
 
 ```{r}
-olr_imp <- tidy(olr_model) %>%
-  filter(!str_detect(term, "\\|")) %>%
-  mutate(AbsCoef = abs(estimate)) %>%
-  arrange(desc(AbsCoef))
+data <- data %>% mutate(Job_Offers = factor(Job_Offers, ordered = TRUE))
+tree_formula <- Job_Offers ~ Internships_Completed + High_School_GPA + Field_of_Study + Networking_Score + Projects_Completed
+tree_model <- rpart(tree_formula, data = data, method = "class", control = rpart.control(cp = 0.005, minsplit = 50))
+rpart.plot(tree_model,
+           type = 3,        # Show split labels and probabilities
+           extra = 101,     # Show number of obs and predicted value
+           box.palette = "Blues",
+           main = "Decision Tree: Predicting Number of Job Offers")
 ```
 
-```{r}
-ggplot(olr_imp, aes(x = reorder(term, AbsCoef), y = AbsCoef)) +
-  geom_col(fill = "steelblue") +
-  coord_flip() +
-  theme_minimal() +
-  labs(
-    title = "Variable Importance (Ordinal Logistic Regression)",
-    x = "Predictor", y = "Absolute Coefficient"
-  )
-```
+
+
 
 
 # Discussion, conclusion and recommendations {#sec-discuss}
