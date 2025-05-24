@@ -40,9 +40,6 @@ section-depth: 3
 library(knitr)
 library(tidyverse)
 library(randomForest)
-library(rsample)
-library(rpart)
-library(rpart.plot)
 ```
 
 
@@ -70,9 +67,10 @@ data <- read.csv("data/education_career_success.csv")
 ```
 
 ```{r}
+# filter gender variable, and...
 # convert text liked variable into categorical variable
 data <- data %>%
-  dplyr::filter(Gender %in% c("Male", "Female")) %>%
+  dplyr::filter(Gender %in% c("Male", "Female") ) %>%
   mutate(across(where(is.character), as.factor))
 
 # convert ordinal variable to ordered factor 
@@ -119,7 +117,7 @@ Given that `Job_Offers` is a count variable, we select random forest model, a no
 # Results {#sec-result}
 (Maximum 200 words. Should include either a figure or a table.)
 
-## Get the most important variables for Job_Offers {#sec-rfx}
+## Associated factors for receiving job offers. {#sec-rfForImportantFactors}
 
 ```{r}
 
@@ -160,15 +158,39 @@ ggplot(rf_imp_df, aes(x = reorder(Variable, Importance), y = Importance)) +
 @fig-rfimportance shows the relative importance of predictors in the random forest model. Variables such as number of complete internships and projects, SAT score, and gender were most associated with the number of job offers receiving by the student. Negative importance scores (e.g., for Age) suggest minimal or noisy contributions to model performance.
 
 
+## Association between important factors and job offers.  {#sec-visualiseTrend}
+
 ```{r}
-data <- data %>% mutate(Job_Offers = factor(Job_Offers, ordered = TRUE))
-tree_formula <- Job_Offers ~ Internships_Completed + High_School_GPA + Field_of_Study + Networking_Score + Projects_Completed
-tree_model <- rpart(tree_formula, data = data, method = "class", control = rpart.control(cp = 0.005, minsplit = 50))
-rpart.plot(tree_model,
-           type = 3,        # Show split labels and probabilities
-           extra = 101,     # Show number of obs and predicted value
-           box.palette = "Blues",
-           main = "Decision Tree: Predicting Number of Job Offers")
+data <- data %>%
+  mutate(HS_GPA_Level = cut(
+    High_School_GPA,
+    breaks = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4),
+    labels = c( "0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4"),
+    right = TRUE,
+    ordered_result = TRUE
+  ))
+
+data_plot <- data %>%
+  select(Job_Offers, Internships_Completed, HS_GPA_Level, Field_of_Study, Networking_Score, Projects_Completed) %>%
+  mutate(across(-Job_Offers, as.character)) %>%    
+  pivot_longer(-Job_Offers, names_to = "Variable", values_to = "Value")
+```
+
+
+```{r}
+#| label: fig-trend
+#| fig-cap: "Relationship between the most important student experiences and job offers received"
+#| 
+ggplot(data_plot, aes(x = factor(Value), y = Job_Offers)) +
+  geom_boxplot() + 
+  facet_wrap(~ Variable, scales = "free_x") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(
+    title = "Relationship between Top Predictors and Job Offers",
+    x = "",
+    y = "Number of Job Offers Received"
+  )
 ```
 
 
