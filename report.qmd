@@ -35,43 +35,51 @@ section-divs: true
 section-depth: 3
 ---
 
-
 ```{r}
 library(knitr)
 library(tidyverse)
 ```
 
-
 # Executive summary {#sec-summary}
+
 (Maximum of 4 sentences)
 
-
 # Introduction {#sec-intro}
-(Maximum 10 sentences)
 
+(Maximum 10 sentences)
 
 Graduates today face many questions about how their experiences influence their careers. Grades alone may not determine who gets the best job opportunities or feels happiest at work. This report explores two main questions: Which student experiences are linked to receiving more job offers? And what makes graduates feel satisfied with their careers and achieve a good work-life balance?
 
 To answer these questions, we use data from 5,000 recent graduates. This data includes information about their personal characteristics, grades, internships, certifications, and soft skills, as well as their self-rated career satisfaction and work-life balance. We do not test specific theories but instead look openly for patterns. Our analysis will highlight which experiences seem connected to better career outcomes, as these may help students and educators see how different experiences could affect career paths.
 
-
-
 # Methodology {#sec-method}
-(Maximum 300 words; Should include a figure and a table and those must be referenced in the text and have adequate captions)
 
+(Maximum 300 words; Should include a figure and a table and those must be referenced in the text and have adequate captions)
 
 ```{r}
 data <- read.csv("data/education_career_success.csv")
 ```
 
-
 # Results {#sec-result}
-(Maximum 200 words. Should include either a figure or a table.)
 
+(Maximum 200 words. Should include either a figure or a table.)
 
 # Discussion, conclusion and recommendations {#sec-discuss}
 
+**Discussion and Conclusion**
+
+The analysis revealed that internships, SAT scores, and completed projects were the most influential predictors of job offers, highlighting a shift in employer focus toward practical skills over academic credentials. Internships and project work allow students to apply theory in real-world contexts, making them more attractive to employers. In contrast, soft skills and university prestige, while valued, are harder to measure and less directly linked to immediate job performance. The model confirms experience outweighs academic reputation in early career outcomes.
+
+In conclusion, practical experience and applied skills play a more decisive role in early career success than academic prestige or soft skills.
+
+**Recommendations**
+
+-   **Students** are encouraged to actively pursue internships and project-based learning opportunities to strengthen their practical competencies and enhance employability.
+
+-   **Higher education institutions** should consider embedding structured experiential learning components- such as industry placements, capstone projects, and applied coursework- into academic programs to better align with labour market demands.
+
+-   **Career development services** should provide targeted guidance that emphasises the importance of real-world experience alongside academic achievement in preparing graduates for competitive job markets.
 
 # Reference section {#sec-ref}
+
 (Include at least 1 reference.)
- 
