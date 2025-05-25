@@ -68,17 +68,18 @@ data <- read.csv("data/education_career_success.csv")
 
 **Discussion and Conclusion**
 
-The analysis revealed that internships, SAT scores, and completed projects were the most influential predictors of job offers, highlighting a shift in employer focus toward practical skills over academic credentials. Internships and project work allow students to apply theory in real-world contexts, making them more attractive to employers. In contrast, soft skills and university prestige, while valued, are harder to measure and less directly linked to immediate job performance. The model confirms experience outweighs academic reputation in early career outcomes.
+The analysis revealed that internships, high school GPA, and field of study were the most influential predictors of job offers, indicating a shift in employer focus toward practical experience and core academic performance. Internships enable students to apply their knowledge in real-world settings, while high school achievement may signal foundational discipline and capability. In contrast, soft skills and university prestige, though valued, appear less directly tied to immediate employability. The model reinforces the view that tangible experience and academic readiness carry more weight than reputational indicators in early career outcomes.
 
-In conclusion, practical experience and applied skills play a more decisive role in early career success than academic prestige or soft skills.
+In conclusion, applied experience and foundational academic strength play a more decisive role in graduate success than institutional status or soft skill measures.
 
 **Recommendations**
 
--   **Students** are encouraged to actively pursue internships and project-based learning opportunities to strengthen their practical competencies and enhance employability.
+-   **Students** are encouraged to actively pursue internships and maintain strong academic performance, particularly during high school, to enhance their employability and demonstrate readiness to prospective employers.
 
--   **Higher education institutions** should consider embedding structured experiential learning components- such as industry placements, capstone projects, and applied coursework- into academic programs to better align with labour market demands.
 
--   **Career development services** should provide targeted guidance that emphasises the importance of real-world experience alongside academic achievement in preparing graduates for competitive job markets.
+-   **Higher education institutions** should integrate structured experiential learning opportunities—such as industry placements, capstone projects, and applied coursework—while also providing clearer academic pathways aligned with in-demand fields of study.
+
+-   **Career development services** should offer tailored guidance that emphasises the importance of both practical experience and foundational academic performance, equipping graduates to compete more effectively in the job market.
 
 # Reference section {#sec-ref}
 
