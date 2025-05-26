@@ -68,18 +68,18 @@ data <- read.csv("data/education_career_success.csv")
 
 **Discussion and Conclusion**
 
-The analysis revealed that internships, high school GPA, and field of study were the most influential predictors of job offers, indicating a shift in employer focus toward practical experience and core academic performance. Internships enable students to apply their knowledge in real-world settings, while high school achievement may signal foundational discipline and capability. In contrast, soft skills and university prestige, though valued, appear less directly tied to immediate employability. The model reinforces the view that tangible experience and academic readiness carry more weight than reputational indicators in early career outcomes.
+The analysis revealed that internships completed, high school GPA, field of study, networking skill, and university projects completed were the most influential predictors of job offers. Internships and a strong academic foundation, particularly in high school, were consistently associated with better outcomes, indicating that employers value both preparedness and discipline. While field of study also shaped job offer patterns, the effect was relatively stable across disciplines. Interestingly, both networking skill and number of university projects showed a downward trend beyond moderate levels, suggesting that overinvestment in these areas may yield diminishing returns. These results highlight the nuanced ways in which various student experiences contribute to employability.
 
-In conclusion, applied experience and foundational academic strength play a more decisive role in graduate success than institutional status or soft skill measures.
+In conclusion, early career success is most strongly driven by a balance of practical experience, academic performance, and strategic engagement in co-curricular activities.
 
 **Recommendations**
 
--   **Students** are encouraged to actively pursue internships and maintain strong academic performance, particularly during high school, to enhance their employability and demonstrate readiness to prospective employers.
+-   **Students** are encouraged to pursue internships and maintain strong academic performance, particularly during high school, while engaging strategically in networking and project-based activities to avoid diminishing returns from overextension.
 
 
--   **Higher education institutions** should integrate structured experiential learning opportunities—such as industry placements, capstone projects, and applied coursework—while also providing clearer academic pathways aligned with in-demand fields of study.
+-   **Higher education institutions** sshould embed structured experiential learning—such as industry placements and capstone projects—into academic programs, and ensure alignment between fields of study and evolving labour market demands.
 
--   **Career development services** should offer tailored guidance that emphasises the importance of both practical experience and foundational academic performance, equipping graduates to compete more effectively in the job market.
+-   **Career development services** should provide targeted support that promotes a balanced portfolio of academic achievement, practical experience, and purposeful co-curricular involvement to optimise graduate employability.
 
 # Reference section {#sec-ref}
 
