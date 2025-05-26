@@ -48,10 +48,7 @@ library(tidytext)
 
 This project examines which student experiences most strongly influence early career success, using a dataset of 5,000 graduates from Kaggle. The analysis identified internships, high school GPA, field of study, networking skill, and university projects completed as the most significant predictors of job offers, while university ranking and soft skills demonstrated limited impact. The random forest model suggests that employers value a combination of practical experience, academic foundation, and selective engagement in co-curricular activities over institutional prestige. These findings challenge conventional assumptions about employability and provide meaningful insights to help students make informed, strategic career decisions.
 
-
 # Introduction {#sec-intro}
-
-(Maximum 10 sentences)
 
 Graduates today face many questions about how their experiences influence their careers. Grades alone may not determine who gets the more job opportunities. This report explores which student experiences are associated with receiving more job offers.
 
@@ -148,8 +145,6 @@ The top 5 predictors were selected based on their importance scores (@fig-rfimpo
 
 # Results {#sec-result}
 
-(Maximum 200 words. Should include either a figure or a table.)
-
 ## Associated factors for receiving job offers. {#sec-rfForImportantFactors}
 
 ```{r}
@@ -192,6 +187,7 @@ ggplot(rf_imp_df, aes(x = reorder(Variable, Importance), y = Importance)) +
 
 ## Association between important factors and job offers. {#sec-visualiseTrend}
 
+@fig-boxplot and @fig-mean further illustrate how job offers vary across the top five predictors.
 
 ```{r}
 data <- data %>%
@@ -239,6 +235,7 @@ data_plot_sorted <- data_plot %>%
   ungroup()
 ```
 
+The boxplot (@fig-boxplot) shows that the median number of job offers falls between 2 and 3 for most categories. The plot also reveals a downward trend in medians as networking scores and project counts increase.
 
 ```{r}
 #| label: fig-boxplot
@@ -263,6 +260,10 @@ data_plot_sorted %>%
   labs(x = NULL, y = "Number of Job Offers") 
   
 ```
+
+While the patterns for high school GPA and internship experience are more subtle in the boxplot, @fig-mean shows clear upward trends, suggesting that students with higher GPAs and more internships receive more job offers on average.
+
+Among fields of study, Medicine leads with the highest average job offers, followed by Arts and Mathematics, while Computer Science ranks the lowest.
 
 ```{r}
 #| label: fig-mean
@@ -311,7 +312,6 @@ data_plot_sorted %>%
     y = "Average Number of Job Offers"
   )
 ```
-
 
 # Discussion, conclusion and recommendations {#sec-discuss}
 
