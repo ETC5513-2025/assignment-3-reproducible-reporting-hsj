@@ -131,6 +131,8 @@ rf_model <- randomForest(form, data = data, importance = TRUE)
 
 ```
 
+@fig-rfimportance ranks predictors by their importance in the random forest model. Students’ practical experiences (Completed Internships and Academic Projects), academic background (High School GPA and Field of Study), and interpersonal networking skills are more associated with the number of job offers received. In contrast, factors such as University Ranking and Soft Skills Score appear to have minimal influence.
+
 ```{r}
 #| label: fig-rfimportance
 #| fig-cap: "Importance of Predictors for Number of Job Offers Received"
@@ -151,69 +153,13 @@ ggplot(rf_imp_df, aes(x = reorder(Variable, Importance), y = Importance)) +
   )
 ```
 
-@fig-rfimportance shows the relative importance of predictors in the random forest model. Variables such as number of complete internships and projects, SAT score, and gender were most associated with the number of job offers receiving by the student. Negative importance scores (e.g., for Age) suggest minimal or noisy contributions to model performance.
+@fig-boxplot and @fig-mean further illustrate how job offers vary across the top five predictors.
 
-## How to get permutation importance
+The boxplot (@fig-boxplot) shows that the median number of job offers falls between 2 and 3 for most categories. The plot also reveals a downward trend in medians as networking scores and project counts increase.
 
-The permutation importance test result is the same as asking the question "How much worse does my model perform if I destroy just this one variable"
+While the patterns for GPA and internship experience are more subtle in the boxplot, @fig-mean shows clear upward trends, suggessting that students with higher GPAs and more internships receive more job offers on average.
 
-So in a simple way, using the value from random forest model, the permutation importance was calculated by randomly shuffle the value of a variable in the tree and record its out-of-bag error, then calculate the different in out-of-bag error between the permutated value and the original value in percentage. Repeat this calculating for all the variables, we now get the permutation importance table @fig-rfimportance that shows the relative importance of predictors in the random forest model.
-
-## What permutation importance say about the effect of variable to the number of job offers that student can get
-
-If permutated a variable cause the error to jumps up -\> that variable has large positive importance.
-
-If permutated a variable makes no difference -\> importance of that variable ≈ 0.
-
-If permutated a variable lowers the error instead -\> that variable has negative importance.
-
-## Interpretation:
-
-By looking at the @fig-rfimportance created by Jackie, we could see that:
-
-The amount of internship and projects you complete before, your High School GPA score, your Field of Study and Networking_score are some very strong predictors on the number of job offers. This is because by permutating these variable will create a lot of errors.
-
-Moreover, how high of the score a student can get in SAT test together with whether that student started a business, their university GPA, their certifications, their starting salary and age are some of the variable with positive importance although not as strong as the top predictors. It is interesting to see that how much GPA a student can get in their High school has a larger impact compare to their University's GPA.
-
-On the other hand, age of the student, their soft skill and the time taken to receive the first promotion for student seem to not be significant in term of predicting job offers. We can also see that soft skill is consider as more inferior compare to networking skill which is an interesting finding since it tell us connection is a much better investment of time compare to non-technical skills for getting job offers.
-
-In addition, student's current job level and their university ranking are consider to be bad variables and are irrelevant in predicting how much job offers a students can get.
-
-# Ordinal Logistic regression for career satisfaction
-
-## Association between important factors and job offers. {#sec-visualiseTrend}
-
-```{r}
-data <- data %>%
-  mutate(HS_GPA_Level = cut(
-    High_School_GPA,
-    breaks = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4),
-    labels = c( "0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4"),
-    right = TRUE,
-    ordered_result = TRUE
-  ))
-
-data_plot <- data %>%
-  select(Job_Offers, Internships_Completed, HS_GPA_Level, Field_of_Study, Networking_Score, Projects_Completed) %>%
-  mutate(across(-Job_Offers, as.character)) %>%    
-  pivot_longer(-Job_Offers, names_to = "Variable", values_to = "Value")
-```
-
-```{r}
-#| label: fig-trend
-#| fig-cap: "Relationship between the most important student experiences and job offers received"
-#| 
-ggplot(data_plot, aes(x = factor(Value), y = Job_Offers)) +
-  geom_boxplot() + 
-  facet_wrap(~ Variable, scales = "free_x") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(
-    title = "Relationship between Top Predictors and Job Offers",
-    x = "",
-    y = "Number of Job Offers Received"
-  )
-```
+Among fields of study, Medicine leads with the highest average job offers, followed by Arts and Mathematics, while Computer Science ranks the lowest.
 
 # Discussion, conclusion and recommendations {#sec-discuss}
 
