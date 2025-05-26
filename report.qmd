@@ -44,7 +44,7 @@ library(tidyverse)
 
 # Executive summary {#sec-summary}
 
-This project examines which student experiences most strongly influence early career success, using a dataset of 5,000 graduates from Kaggle. The analysis identified internships, high school GPA, and field of study as the most significant predictors of job offers, while university ranking and soft skills demonstrated limited impact. The random forest model suggests that employers place greater emphasis on practical experience and foundational academic performance than on institutional prestige. These findings challenge conventional assumptions about employability and offer valuable guidance for students seeking to make informed, strategic career decisions.
+This project examines which student experiences most strongly influence early career success, using a dataset of 5,000 graduates from Kaggle. The analysis identified internships, high school GPA, field of study, networking skill, and university projects completed as the most significant predictors of job offers, while university ranking and soft skills demonstrated limited impact. The random forest model suggests that employers value a combination of practical experience, academic foundation, and selective engagement in co-curricular activities over institutional prestige. These findings challenge conventional assumptions about employability and provide meaningful insights to help students make informed, strategic career decisions.
 
 
 
