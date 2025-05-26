@@ -11,12 +11,14 @@ format:
   pdf:
     toc: true
     theme: journal
+    fig-width: 4      
+    fig-height: 3    
     margin-top: 20mm
     margin-bottom: 25mm
     margin-left: 25mm
     margin-right: 25mm
 
-# code chunk and result settings, globally, (method 1)
+# code chunk and result settings
 execute: 
   echo: false      # hide code chunk
   eval: true       # run the code
@@ -35,35 +37,57 @@ section-divs: true
 section-depth: 3
 ---
 
-
 ```{r}
 library(knitr)
 library(tidyverse)
 library(randomForest)
+library(tidytext)
 ```
 
-
 # Executive summary {#sec-summary}
+
 (Maximum of 4 sentences)
 
-
 # Introduction {#sec-intro}
+
 (Maximum 10 sentences)
 
+Graduates today face many questions about how their experiences influence their careers. Grades alone may not determine who gets the more job opportunities. This report explores which student experiences are associated with receiving more job offers.
 
-Graduates today face many questions about how their experiences influence their careers. Grades alone may not determine who gets the most job opportunities. This report explores which student experiences are linked to receiving more job offers?
-
-To answer these questions, we use a dataset of 5,000 recent graduates from Kaggle. It includes information about students’ academic background, personal demographic, and career-related outcomes. Rather than testing predefined theories, this project takes an open-ended, pattern-oriented approach. The aim is to explore which types of experiences appear most consistently linked to job outcomes and personal satisfaction.
-
+To answer this question, we use a kaggle dataset which contains 5,000 records from recent graduates. It includes information about students’ academic background, personal demographic, and career-related outcomes. Rather than testing predefined theories, this project takes an open-ended, pattern-oriented approach. The aim is to explore which types of experiences appear most consistently linked to job outcomes and personal satisfaction.
 
 # Methodology {#sec-method}
+
 (Maximum 300 words; Should include a figure and a table and those must be referenced in the text and have adequate captions)
 
-
-This study uses an exploratory approach to investigate how students’ academic and experiential attributes may relate to early career outcomes. The dataset includes 5,000 graduate records collected from Kaggle.
+## Data source and cleaning {#sec-dataSize}
 
 ```{r}
 data <- read.csv("data/education_career_success.csv")
+```
+
+```{r}
+#| eval: false
+sapply(data, n_distinct)
+```
+
+The data was collected from [Kaggle](https://www.kaggle.com/datasets/adilshamim8/education-and-career-success) and initially contains records for `r nrow(data)` recent university graduates. During our data processing, we found 3.8% (`r sum(data$Gender == "Other")` rows) of the data have inconsistent gender values, as shown in @fig-genderDistribution. Sine this is likely to provide misleading information, we decided to exclude them from further analysis.
+
+```{r}
+#| label: fig-genderDistribution
+#| fig-cap: "Number of Gender Categories"
+
+data %>%
+  count(Gender) %>%
+  mutate(perc = round(100 * n / sum(n), 1),
+         label = paste0(Gender, ": ", perc, "%")) %>%
+ggplot(aes(x = "", y = n, fill = Gender)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = label), position = position_stack(vjust = 0.5)) +
+  labs(x = NULL, y = NULL) +
+  theme_void() +
+  theme(legend.position = "none")
 ```
 
 ```{r}
@@ -85,16 +109,19 @@ data <- data %>%
   )
 ```
 
+## Model selection {#sec-dataTypeDataModel}
+
+@tbl-data presents the first five records in the dataset and highlights the diversity of input variable types. The dataset includes numerical variables such as `SAT_Score`, categorical fields like `Field_of_Study`, and ordinal variables such as `Networking_Score`. This variety makes it unsuitable for models that require specific data type.
+
 ```{r}
 #| label: tbl-data
-#| tbl-cap: "Dataset variables and their descriptions"
+#| tbl-cap: "First 5 records in filtered dataset"
 
-data %>% glimpse()
+df <- as.data.frame(t(head(data, 5)))
+knitr::kable(df)
 ```
 
-We began by examining the structure of the input variables. As shown in @tbl-data, the dataset contains a mix of continuous (e.g., `SAT_Score`), ordinal (e.g., `Certifications`), and categorical (e.g., `Field_of_Study`) features, with a wide range of unique values. This diversity limits the applicability of simple linear models and supports the use of flexible methods that can accommodate mixed data types and non-linear relationships.
-
-We also analysed the outcome variable. As visualised in @fig-outcomeskew, variable `Job_Offers` is relatively well-distributed and show minimal skewness.
+@fig-outcomeskew shows the distribution of the outcome variable, `Job_Offers`, which represents the number of job offers received. The distribution is relatively balanced across classes, meaning no class dominates the data, and no transformation is required. Furthermore, since `Job_Offers` is ordinal, it emphasis the use of classification model over regression model.
 
 ```{r}
 #| label: fig-outcomeskew
@@ -110,11 +137,16 @@ data %>%
   labs(x = "Value", y = "Count")
 ```
 
-Given that `Job_Offers` is a count variable, we select random forest model, a non-parametric model capable of capturing complex relationships without strong distributional assumptions. 
+Given these characteristics, random forest is an appropriate modelling choice. It is a flexible and robust algorithm that can naturally handle both numerical and categorical inputs without extensive preprocessing. In addition, it captures non-linear relationships and performs well even when input variables vary in scale or measurement type.
 
+## Accesing associations. {#sec-importance}
 
+After fitting the random forest model, we use permutation importance to rank all input variables (@fig-rfimportance). This method measures how much the model’s accuracy drops when the values of one variable are randomly shuffled. A larger drop means the variable was more important for the model’s predictions. This allows us to assess which factors the model relies on most when estimating job offers.
+
+The top 5 predictors were selected based on their importance scores (@fig-rfimportance) and further explored using boxplot with trend lines for the direction of association (@fig-trend).
 
 # Results {#sec-result}
+
 (Maximum 200 words. Should include either a figure or a table.)
 
 ## Associated factors for receiving job offers. {#sec-rfForImportantFactors}
@@ -134,6 +166,8 @@ set.seed(3)
 rf_model <- randomForest(form, data = data, importance = TRUE)
 
 ```
+
+@fig-rfimportance ranks predictors by their importance in the random forest model. Students’ practical experiences (Completed Internships and Academic Projects), academic background (High School GPA and Field of Study), and interpersonal networking skills are more associated with the number of job offers received. In contrast, factors such as University Ranking and Soft Skills Score appear to have minimal influence.
 
 ```{r}
 #| label: fig-rfimportance
@@ -155,10 +189,8 @@ ggplot(rf_imp_df, aes(x = reorder(Variable, Importance), y = Importance)) +
   )
 ```
 
-@fig-rfimportance shows the relative importance of predictors in the random forest model. Variables such as number of complete internships and projects, SAT score, and gender were most associated with the number of job offers receiving by the student. Negative importance scores (e.g., for Age) suggest minimal or noisy contributions to model performance.
+## Association between important factors and job offers. {#sec-visualiseTrend}
 
-
-## Association between important factors and job offers.  {#sec-visualiseTrend}
 
 ```{r}
 data <- data %>%
@@ -173,33 +205,115 @@ data <- data %>%
 data_plot <- data %>%
   select(Job_Offers, Internships_Completed, HS_GPA_Level, Field_of_Study, Networking_Score, Projects_Completed) %>%
   mutate(across(-Job_Offers, as.character)) %>%    
-  pivot_longer(-Job_Offers, names_to = "Variable", values_to = "Value")
+  pivot_longer(-Job_Offers, names_to = "Variable", values_to = "Category")
+
+
+gpa_levels <- c("1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4")
+
+data_plot_sorted <- data_plot %>%
+  group_by(Variable) %>%
+  group_modify(~{
+    facet_df <- .x               # rows for this facet
+    facet_nm <- .y$Variable[1]   # facet name (group key)
+
+    if (facet_nm == "HS_GPA_Level") {
+      # apply manual order
+      facet_df %>%
+        mutate(Category = factor(Category, levels = gpa_levels))
+    } else {
+      # automatic rule: numeric facets in ascending order,
+      # text facets keep original order
+      Category_num <- suppressWarnings(as.numeric(facet_df$Category))
+
+      level_order <- if (all(is.na(Category_num))) {
+        unique(facet_df$Category)                             # text → keep entry order
+      } else {
+        unique(facet_df$Category[order(Category_num, na.last = NA)])  # numbers → asc
+      }
+
+      facet_df %>%
+        mutate(Category = factor(Category, levels = level_order))
+    }
+  }) %>%
+  ungroup()
 ```
 
 
 ```{r}
-#| label: fig-trend
-#| fig-cap: "Relationship between the most important student experiences and job offers received"
-#| 
-ggplot(data_plot, aes(x = factor(Value), y = Job_Offers)) +
-  geom_boxplot() + 
-  facet_wrap(~ Variable, scales = "free_x") +
+#| label: fig-boxplot
+#| fig-cap: "Distribution of job offers across student categories"
+#| fig-width: 8   
+#| fig-height: 3
+
+
+data_plot_sorted %>%
+  ggplot(aes(x = Category, y = Job_Offers)) +
+  geom_boxplot() +
+  facet_wrap(~ Variable, scales = "free_x", nrow = 1,
+             labeller = as_labeller(c(
+                "Field_of_Study" = "Field of Study",
+                "HS_GPA_Level" = "High School GPA",
+                "Internships_Completed" = "Internships Completed",
+                "Networking_Score" = "Networking Skill",
+                "Projects_Completed" = "Uni Projects Completed"
+              ))) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = NULL, y = "Number of Job Offers") 
+  
+```
+
+```{r}
+#| label: fig-mean
+#| fig-cap: "Average number of job offers by predictor category"
+#| fig-width: 8   
+#| fig-height: 3
+
+
+data_plot_sorted %>%
+  group_by(Variable, Category) %>%
+  summarise(avg_offer = mean(Job_Offers), .groups = "drop") %>%
+  group_by(Variable) %>%
+  mutate(
+    line_ok = Variable != "Field_of_Study",
+    Category = {
+      raw_cat <- as.character(Category)
+      if (first(Variable) == "HS_GPA_Level") {
+        left_val <- as.numeric(sub("-.*", "", raw_cat))
+        factor(Category, levels = raw_cat[order(left_val)])
+      } else if (all(grepl("^[0-9.]+$", raw_cat))) {
+        factor(Category, levels = raw_cat[order(as.numeric(raw_cat))])
+      } else if (all(grepl("^[0-9.]+-[0-9.]+$", raw_cat))) {
+        right_val <- as.numeric(sub(".*-", "", raw_cat))
+        factor(Category, levels = raw_cat[order(-right_val)])
+      } else {
+        factor(Category, levels = raw_cat[order(avg_offer, decreasing = TRUE)])
+      }
+    }
+  ) %>%
+  ungroup() %>%
+  ggplot(aes(x = Category, y = avg_offer, group = Variable)) +
+  geom_point(color = "steelblue", size = 2.5) +
+  geom_line(data = function(df) dplyr::filter(df, line_ok), aes(group = 1), color = "red") +
+  facet_wrap(~ Variable, scales = "free_x", nrow = 1,
+             labeller = as_labeller(c(
+               "Field_of_Study" = "Field of Study",
+               "HS_GPA_Level" = "High School GPA",
+               "Internships_Completed" = "Internships Completed",
+               "Networking_Score" = "Networking Skill",
+               "Projects_Completed" = "Uni Projects Completed"
+             ))) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(
-    title = "Relationship between Top Predictors and Job Offers",
-    x = "",
-    y = "Number of Job Offers Received"
+    x = NULL,
+    y = "Average Number of Job Offers"
   )
 ```
 
 
-
-
-
 # Discussion, conclusion and recommendations {#sec-discuss}
 
-
 # Reference section {#sec-ref}
+
 (Include at least 1 reference.)
- 
