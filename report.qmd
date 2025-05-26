@@ -1,6 +1,12 @@
 ---
-title: "Education & Career Success"
-author: "Tran Dang Huy, Sia Chawla Chawla, Jiaqi Xu"
+title: "Identifying the Student Characteristics That Influence Employment Outcomes"
+author: 
+  - name: Sia Chawla Chawla
+    contribution: Exclusive Summary, Discussion
+  - name: Tran Dang Huy
+    contribution: Result Interpretations, Reference
+  - name: Jiaqi Xu
+    contribution: Methodology, Result Graphics 
 
 editor: source
 embed-resources: true
@@ -8,7 +14,7 @@ embed-resources: true
 
 # set report format 
 format:
-  pdf:
+  report-pdf:
     toc: true
     theme: journal
     fig-width: 4      
@@ -17,6 +23,8 @@ format:
     margin-bottom: 25mm
     margin-left: 25mm
     margin-right: 25mm
+    organization: ETC5513 Group Assessment
+    
 
 # code chunk and result settings
 execute: 
@@ -35,7 +43,13 @@ execute:
 number-sections: true
 section-divs: true
 section-depth: 3
+
+
+# allow reference 
+bibliography: references.bib
 ---
+
+\newpage
 
 ```{r}
 library(knitr)
@@ -55,6 +69,8 @@ Graduates today face many questions about how their experiences influence their 
 To answer this question, we use a kaggle dataset which contains 5,000 records from recent graduates. It includes information about students’ academic background, personal demographic, and career-related outcomes. Rather than testing predefined theories, this project takes an open-ended, pattern-oriented approach. The aim is to explore which types of experiences appear most consistently linked to job outcomes and personal satisfaction.
 
 # Methodology {#sec-method}
+
+## data exploration {#sec-dataExplore}
 
 ```{r}
 data <- read.csv("data/education_career_success.csv")
@@ -133,7 +149,7 @@ data %>%
 
 Given these characteristics, random forest is an appropriate modelling choice. It is a flexible and robust algorithm that can naturally handle both numerical and categorical inputs without extensive preprocessing. In addition, it captures non-linear relationships and performs well even when input variables vary in scale or measurement type.
 
-## Accesing associations. {#sec-importance}
+## Accesing associations {#sec-importance}
 
 After fitting the random forest model, we use permutation importance to rank all input variables (@fig-rfimportance). This method measures how much the model’s accuracy drops when the values of one variable are randomly shuffled. A larger drop means the variable was more important for the model’s predictions. This allows us to assess which factors the model relies on most when estimating job offers.
 
@@ -326,6 +342,8 @@ In conclusion, early career success is most strongly driven by a balance of prac
 -   **Career development services** should provide targeted support that promotes a balanced portfolio of academic achievement, practical experience, and purposeful co-curricular involvement to optimise graduate employability.
 
 # Reference section {#sec-ref}
+
+
 
 ```         
   Xie Y (2025). _knitr: A General-Purpose Package for Dynamic Report Generation in R_. R package version 1.50,
