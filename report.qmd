@@ -54,9 +54,7 @@ Graduates today face many questions about how their experiences influence their 
 
 To answer this question, we use a kaggle dataset which contains 5,000 records from recent graduates. It includes information about students’ academic background, personal demographic, and career-related outcomes. Rather than testing predefined theories, this project takes an open-ended, pattern-oriented approach. The aim is to explore which types of experiences appear most consistently linked to job outcomes and personal satisfaction.
 
-
 # Methodology {#sec-method}
-
 
 ```{r}
 data <- read.csv("data/education_career_success.csv")
@@ -313,7 +311,6 @@ data_plot_sorted %>%
 
 # Discussion, conclusion and recommendations {#sec-discuss}
 
-
 ## Discussion and Conclusion
 
 The analysis revealed that internships completed, high school GPA, field of study, networking skill, and university projects completed were the most influential predictors of job offers. Internships and a strong academic foundation, particularly in high school, were consistently associated with better outcomes, indicating that employers value both preparedness and discipline. While field of study also shaped job offer patterns, the effect was relatively stable across disciplines. Interestingly, both networking skill and number of university projects showed a downward trend beyond moderate levels, suggesting that overinvestment in these areas may yield diminishing returns. These results highlight the nuanced ways in which various student experiences contribute to employability.
@@ -324,11 +321,29 @@ In conclusion, early career success is most strongly driven by a balance of prac
 
 -   **Students** are encouraged to pursue internships and maintain strong academic performance, particularly during high school, while engaging strategically in networking and project-based activities to avoid diminishing returns from overextension.
 
-
 -   **Higher education institutions** sshould embed structured experiential learning—such as industry placements and capstone projects—into academic programs, and ensure alignment between fields of study and evolving labour market demands.
 
 -   **Career development services** should provide targeted support that promotes a balanced portfolio of academic achievement, practical experience, and purposeful co-curricular involvement to optimise graduate employability.
 
 # Reference section {#sec-ref}
 
-(Include at least 1 reference.)
+```         
+  Xie Y (2025). _knitr: A General-Purpose Package for Dynamic Report Generation in R_. R package version 1.50,
+  <https://yihui.org/knitr/>.
+```
+
+```         
+  Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller
+  E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to
+  the tidyverse.” _Journal of Open Source Software_, *4*(43), 1686. doi:10.21105/joss.01686 <https://doi.org/10.21105/joss.01686>.
+```
+
+```         
+  Liaw A, Wiener M (2002). “Classification and Regression by randomForest.” _R News_, *2*(3), 18-22.
+  <https://CRAN.R-project.org/doc/Rnews/>.
+```
+
+```         
+  Silge J, Robinson D (2016). “tidytext: Text Mining and Analysis Using Tidy Data Principles in R.” _JOSS_, *1*(3).
+  doi:10.21105/joss.00037 <https://doi.org/10.21105/joss.00037>, <http://dx.doi.org/10.21105/joss.00037>.
+```
