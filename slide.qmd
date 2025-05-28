@@ -43,7 +43,7 @@ data = read.csv("data/education_career_success.csv")
 
 ---
 
-## Conclusion
+## Conclusion {.incremental}
 
 - Practical experience and academic performance drive job offers.
 
@@ -56,7 +56,7 @@ data = read.csv("data/education_career_success.csv")
 
 ---
 
-## Recommendations 
+## Recommendations {.incremental}
 
 - **Students** must focus on internships, GPA, and **balanced involvement** in co-curriculars.
 
