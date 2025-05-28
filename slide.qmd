@@ -1,15 +1,17 @@
 ---
 title: "slide"
-format: revealjs
-editor: visual
----
-
-## page 1 for cover page
-
----
-
-## page 2
-
+format: 
+  revealjs:
+    code-fold: true
+    echo: true
+    toc: true
+    multiplex: false
+    show-slide-number: all
+    show-notes: false
+    controls: true
+    width: 1280
+    height: 750
+embed-resources: true
 ---
 
 ## page 3
@@ -17,6 +19,11 @@ editor: visual
 ---
 
 ## page 4
+
+```{r}
+data = read.csv("data/education_career_success.csv")
+```
+
 
 --- 
 
@@ -40,4 +47,4 @@ editor: visual
 
 ---
 
-## page 10 for reference???
+## page 10
