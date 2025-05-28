@@ -43,8 +43,23 @@ data = read.csv("data/education_career_success.csv")
 
 ---
 
-## page 9
+## Conclusion
+
+- Practical experience and academic performance drive job offers.
+
+- Internships and high school GPA are strong predictors.
+
+- Field of study, networking, and projects matter—if approached strategically.
+
+- Institutional prestige and soft skills had limited impact.
+
 
 ---
 
-## page 10
+## Recommendations 
+
+- **Students** must focus on internships, GPA, and **balanced involvement** in co-curriculars.
+
+- **Universities** should embed industry-linked experiences and align programs with job market needs.
+
+- **Career Services** must promote strategic engagement beyond academics.
