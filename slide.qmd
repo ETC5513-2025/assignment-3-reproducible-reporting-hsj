@@ -1,33 +1,236 @@
 ---
-title: "slide"
+title: "What Associates With More Job Offers?"
+subtitle: "Exploring University Student Behaviours and Attributes"
+author: "Sia Chawla Chawla,Tran Dang Huy, Jiaqi Xu"
 format: 
   revealjs:
-    code-fold: true
-    echo: true
     toc: true
+    smaller: true
+    scrollable: true
     multiplex: false
     show-slide-number: all
     show-notes: false
     controls: true
     width: 1280
     height: 750
+
+    
 embed-resources: true
+
+
+# code chunk and result settings
+execute: 
+  echo: false      # hide code chunk
+  eval: true       # run the code
+  include: true    # show output
+  cache: false     
+  warning: false
+  message: false
 ---
 
-## page 3
-
----
-
-## page 4
+## Introduction
 
 ```{r}
-data = read.csv("data/education_career_success.csv")
+library(tidyverse)
 ```
 
 
+::: {.callout-note title="Graduate Employment in Australia (2023-2024)"}
+
+According to [ABS](https://www.abs.gov.au/statistics/people/education/education-and-work-australia/latest-release) and [Ministers of the Education Portfolio](https://ministers.education.gov.au/clare/graduate-employment-rates-hit-highest-level-more-decade):
+
+- **84%** of Australians with a `non-school qualification` in 2023 were employed in 2024.
+- **78.5%** of `domestic graduates` and **57.7%** of `international graduates` found full-time job 4-6 months after graduation 
+:::
+
+:::{.fragment}
+These high employment rates suggest that **academic grades alone may no longer be the key differentiator** in job outcomes.  
+:::
+
+
+
+:::{.callout-tip title = "Research Question" .fragment}
+**What student behaviours, attributes, or practices are most associated with receiving more job offers?** 
+:::
+
+---
+
+## Dataset Description 
+
+::: {.callout-note title="Data Source"}
+Kaggle - [Education and Career Success](https://www.kaggle.com/datasets/adilshamim8/education-and-career-success)  
+:::
+
+:::{.columns}
+
+:::{.column width="65%"}
+
+```{r}
+data = read.csv("data/education_career_success.csv")
+glimpse(data)
+```
+::: 
+
+:::{.column width="35%"}
+
+Dataset containing categorical, ordinal, and continuous variables.
+
+- Demographic
+- Academic Performance
+- Skills and Experiences
+- Career Outcome
+
+The outcome, `Job_Offers`, is a counting variable
+
+:::
+
+:::
+
 --- 
 
-## page 5
+## Methodology
+
+::: {.columns}
+
+::: {.column width="40%"}
+
+**Data Exploration**:
+
+- Rows with `Gender = "Other"` (3.8%) are excluded due to small sample size  
+
+**Variable Importance**:
+
+- `Random forest` with `permutation`  
+  - Handles mixed data types  
+  - Captures non-linear relationships  
+
+**Direction of Association**: 
+
+- `Boxplot` and `scatterplot`
+  - Suitable for count data  
+  - Show group-wise patterns  
+
+:::
+
+::: {.column width="30%"}
+```{r}
+#| label: fig-genderDistribution
+#| fig-cap: "Distribution of Gender"
+#| fig-width: 4
+#| fig-align: center
+
+data %>%
+  count(Gender) %>%
+  mutate(
+    perc = round(100 * n / sum(n), 1),
+    label = paste0(Gender, ": ", perc, "%")
+  ) %>%
+  ggplot(aes(x = "", y = n, fill = Gender)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = label), 
+            position = position_stack(vjust = 0.5), 
+            fontface = "bold", 
+            size = 5) +
+  labs(x = NULL, y = NULL) +
+  theme_void() +
+  theme(
+    legend.position = "none",
+    plot.margin = margin(t = 0, r = 0, b = 0, l = 0)
+  )
+```
+
+:::
+
+::: {.column width="30%"}
+```{r}
+#| label: fig-outcomeskew
+#| fig-cap: "Distributions of Outcome Variable"
+#| fig-width: 4
+#| fig-align: left
+
+
+data %>%
+  dplyr::select(Job_Offers) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value") %>%
+  ggplot(aes(x = Value)) +
+  geom_histogram(binwidth = 1, fill = "steelblue", color = "white") +
+  theme_minimal() +
+  labs(x = "Number of Job Offer Received", y = "Student Counts", title = NULL)
+```
+:::
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+<!-- :::{.fragment} -->
+<!-- ```{r} -->
+<!-- #| label: fig-genderDistribution -->
+<!-- #| fig-cap: "Distribution of Gender" -->
+<!-- #| fig-width: 4 -->
+<!-- #| fig-height: 4 -->
+
+<!-- data %>% -->
+<!--   count(Gender) %>% -->
+<!--   mutate( -->
+<!--     perc = round(100 * n / sum(n), 1), -->
+<!--     label = paste0(Gender, ": ", perc, "%") -->
+<!--   ) %>% -->
+<!--   ggplot(aes(x = "", y = n, fill = Gender)) + -->
+<!--   geom_col(width = 1, color = "white") + -->
+<!--   coord_polar(theta = "y") + -->
+<!--   geom_text(aes(label = label),  -->
+<!--             position = position_stack(vjust = 0.5),  -->
+<!--             fontface = "bold",  -->
+<!--             size = 5) + -->
+<!--   labs(x = NULL, y = NULL) + -->
+<!--   theme_void() + -->
+<!--   theme( -->
+<!--     legend.position = "none", -->
+<!--     plot.margin = margin(t = 0, r = 0, b = 0, l = 0) -->
+<!--   ) -->
+<!-- ``` -->
+<!-- ::: -->
+
+<!-- :::{.fragment} -->
+<!-- Records with inconsistent value for `gender` were removed.  -->
+<!-- ::: -->
+
+<!-- ::: -->
+<!-- ::: -->
+
+
+
+
+
+
+
+
+
+
+
+<!-- ::: {.columns} -->
+
+<!-- ::: {.column width="30%"} -->
+
+
+<!-- ::: -->
+
+<!-- ::: {.column width="50%"} -->
+<!-- #### Row 2, Col 2 -->
+<!-- More content here -->
+<!-- ::: -->
+
+<!-- ::: -->
 
 ---
 
