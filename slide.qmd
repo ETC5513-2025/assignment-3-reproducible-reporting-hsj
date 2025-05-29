@@ -1,7 +1,7 @@
 ---
 title: "What Associates With More Job Offers?"
 subtitle: "Exploring University Student Behaviours and Attributes"
-author: "Sia Chawla Chawla,Tran Dang Huy, Jiaqi Xu"
+author: "Sia Chawla, Tran Dang Huy (Andy), Jiaqi Xu (Jackie)"
 format: 
   revealjs:
     toc: true
@@ -32,6 +32,9 @@ execute:
 
 ```{r}
 library(tidyverse)
+library(knitr)
+library(tidyverse)
+library(randomForest)
 ```
 
 
@@ -73,7 +76,7 @@ glimpse(data)
 
 :::{.column width="35%"}
 
-Dataset containing categorical, discrete count, and continuous variables.
+This dataset contains categorical, discrete count, and continuous variables.
 
 :::{.incremental}
 - Demographic
@@ -89,6 +92,7 @@ The outcome, `Job_Offers`, is a counting variable
 :::
 
 --- 
+
 
 ## Methodology
 
@@ -143,7 +147,6 @@ data %>%
   theme_void() +
   theme(
     legend.position = "none",
-    plot.margin = margin(t = 0, r = 0, b = 0, l = 0)
   )
 ```
 
@@ -168,18 +171,164 @@ data %>%
 :::
 
 :::
+---
+
+## Elements that contribute to receiving job offers {.smaller}
+
+::::: columns
+::: {.column width="60%"}
+```{r, echo=FALSE}
+outcome_var <- "Job_Offers"
+
+predictors <- data %>%
+  dplyr::select(-Student_ID, -Career_Satisfaction, -Work_Life_Balance) %>%
+  dplyr::select(-all_of(outcome_var)) %>%
+  names()
+
+form <- as.formula(paste(outcome_var, "~", paste(predictors, collapse = " + ")))
+
+set.seed(3)
+rf_model <- randomForest(form, data = data, importance = TRUE)
+rf_imp_df <- importance(rf_model, type = 1) %>%
+  as.data.frame() %>%
+  rownames_to_column("Variable") %>%
+  rename(Importance = `%IncMSE`) %>%  
+  arrange(desc(across(where(is.numeric))))
+
+ggplot(rf_imp_df, aes(x = reorder(Variable, Importance), y = Importance)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  theme_minimal() +
+  labs(
+    x = "Predictor",
+    y = "% Increase in Accuracy"
+  )
+```
+:::
+
+::: {.column width="40%"}
+-   This plot shows the importance of each predictor variable in the **random forest model** by using permutation.
+-   The result shows that most important factors are related to your **academic performance** and **practical experience**.
+-   It is also interesting to noted that **networking skill** rank much higher than **soft skills**.
+:::
+:::::
 
 ---
 
-## page 6
+## Association between important factors and job offers {.smaller}
 
----
+::::: columns
+::: {.column width="50%"}
+```{r, echo=FALSE}
+data <- data %>%
+  mutate(HS_GPA_Level = cut(
+    High_School_GPA,
+    breaks = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4),
+    labels = c( "0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4"),
+    right = TRUE,
+    ordered_result = TRUE
+  ))
 
-## page 7
+data_plot <- data %>%
+  select(Job_Offers, Internships_Completed, HS_GPA_Level, Field_of_Study, Networking_Score, Projects_Completed) %>%
+  mutate(across(-Job_Offers, as.character)) %>%    
+  pivot_longer(-Job_Offers, names_to = "Variable", values_to = "Category")
 
----
 
-## page 8
+gpa_levels <- c("1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4")
+
+data_plot_sorted <- data_plot %>%
+  group_by(Variable) %>%
+  group_modify(~{
+    facet_df <- .x               # rows for this facet
+    facet_nm <- .y$Variable[1]   # facet name (group key)
+
+    if (facet_nm == "HS_GPA_Level") {
+      # apply manual order
+      facet_df %>%
+        mutate(Category = factor(Category, levels = gpa_levels))
+    } else {
+      # automatic rule: numeric facets in ascending order,
+      # text facets keep original order
+      Category_num <- suppressWarnings(as.numeric(facet_df$Category))
+
+      level_order <- if (all(is.na(Category_num))) {
+        unique(facet_df$Category)                             # text → keep entry order
+      } else {
+        unique(facet_df$Category[order(Category_num, na.last = NA)])  # numbers → asc
+      }
+
+      facet_df %>%
+        mutate(Category = factor(Category, levels = level_order))
+    }
+  }) %>%
+  ungroup()
+data_plot_sorted %>%
+  ggplot(aes(x = Category, y = Job_Offers)) +
+  geom_boxplot() +
+  facet_wrap(~ Variable, scales = "free_x", nrow = 1,
+             labeller = as_labeller(c(
+                "Field_of_Study" = "Field of Study",
+                "HS_GPA_Level" = "High School GPA",
+                "Internships_Completed" = "Internships Completed",
+                "Networking_Score" = "Networking Skill",
+                "Projects_Completed" = "Uni Projects Completed"
+              ))) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = NULL, y = "Number of Job Offers") 
+```
+:::
+
+::: {.column width="50%"}
+```{r, echo=FALSE}
+data_plot_sorted %>%
+  group_by(Variable, Category) %>%
+  summarise(avg_offer = mean(Job_Offers), .groups = "drop") %>%
+  group_by(Variable) %>%
+  mutate(
+    line_ok = Variable != "Field_of_Study",
+    Category = {
+      raw_cat <- as.character(Category)
+      if (first(Variable) == "HS_GPA_Level") {
+        left_val <- as.numeric(sub("-.*", "", raw_cat))
+        factor(Category, levels = raw_cat[order(left_val)])
+      } else if (all(grepl("^[0-9.]+$", raw_cat))) {
+        factor(Category, levels = raw_cat[order(as.numeric(raw_cat))])
+      } else if (all(grepl("^[0-9.]+-[0-9.]+$", raw_cat))) {
+        right_val <- as.numeric(sub(".*-", "", raw_cat))
+        factor(Category, levels = raw_cat[order(-right_val)])
+      } else {
+        factor(Category, levels = raw_cat[order(avg_offer, decreasing = TRUE)])
+      }
+    }
+  ) %>%
+  ungroup() %>%
+  ggplot(aes(x = Category, y = avg_offer, group = Variable)) +
+  geom_point(color = "steelblue", size = 2.5) +
+  geom_line(data = function(df) dplyr::filter(df, line_ok), aes(group = 1), color = "red") +
+  facet_wrap(~ Variable, scales = "free_x", nrow = 1,
+             labeller = as_labeller(c(
+               "Field_of_Study" = "Field of Study",
+               "HS_GPA_Level" = "High School GPA",
+               "Internships_Completed" = "Internships Completed",
+               "Networking_Score" = "Networking Skill",
+               "Projects_Completed" = "Uni Projects Completed"
+             ))) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(
+    x = NULL,
+    y = "Average Number of Job Offers"
+  )
+```
+:::
+:::::
+
+-   These two plot shows the distribution of **job offers** from **top 5** important predictors.
+-   Both plots show that the **median** number of **job offers** falls between 2 and 3 for most categories.
+-   Strongest positive signals come from **High-School GPA** and **Internships** because they show a stable increase in average offers as they grow.
+-   It is also interesting to see **Art students** are more likely to receive **job offers** compare to **computer science students**.
 
 ---
 
@@ -217,3 +366,4 @@ data %>%
 ::: {.fragment}
 - **Career Services** must promote strategic engagement beyond academics.
 :::
+
