@@ -111,7 +111,7 @@ The outcome, `Job_Offers`, is a counting variable
 
 - `Random forest` with `permutation`  
   - Handles mixed data types  
-  - Captures non-linear relationships  
+  - Captures not just linear relationships  
 :::
 
 :::{.fragment}
@@ -178,6 +178,21 @@ data %>%
 ::::: columns
 ::: {.column width="60%"}
 ```{r, echo=FALSE}
+
+data <- data %>%
+  dplyr::filter(Gender %in% c("Male", "Female") ) %>%
+  mutate(across(where(is.character), as.factor))
+
+data <- data %>%
+  mutate(
+    Career_Satisfaction = factor(Career_Satisfaction, ordered = TRUE),
+    Soft_Skills_Score = factor(Soft_Skills_Score, ordered = TRUE),
+    Networking_Score = factor(Networking_Score, ordered = TRUE),
+    Current_Job_Level = factor(Current_Job_Level,
+                               levels = c("Entry", "Mid", "Senior", "Executive"), ordered = TRUE),
+    Work_Life_Balance = factor(Work_Life_Balance, order = TRUE),
+  )
+
 outcome_var <- "Job_Offers"
 
 predictors <- data %>%
