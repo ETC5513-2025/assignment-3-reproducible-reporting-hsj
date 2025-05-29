@@ -73,15 +73,17 @@ glimpse(data)
 
 :::{.column width="35%"}
 
-Dataset containing categorical, ordinal, and continuous variables.
+Dataset containing categorical, discrete count, and continuous variables.
 
+:::{.incremental}
 - Demographic
 - Academic Performance
 - Skills and Experiences
 - Career Outcome
-
+:::
+:::{.fragment}
 The outcome, `Job_Offers`, is a counting variable
-
+:::
 :::
 
 :::
@@ -94,22 +96,27 @@ The outcome, `Job_Offers`, is a counting variable
 
 ::: {.column width="40%"}
 
+:::{.fragment}
 **Data Exploration**:
 
 - Rows with `Gender = "Other"` (3.8%) are excluded due to small sample size  
+:::
 
+:::{.fragment}
 **Variable Importance**:
 
 - `Random forest` with `permutation`  
   - Handles mixed data types  
   - Captures non-linear relationships  
+:::
 
+:::{.fragment}
 **Direction of Association**: 
 
 - `Boxplot` and `scatterplot`
   - Suitable for count data  
   - Show group-wise patterns  
-
+:::
 :::
 
 ::: {.column width="30%"}
@@ -161,76 +168,6 @@ data %>%
 :::
 
 :::
-
-
-
-
-
-
-
-
-
-
-
-<!-- :::{.fragment} -->
-<!-- ```{r} -->
-<!-- #| label: fig-genderDistribution -->
-<!-- #| fig-cap: "Distribution of Gender" -->
-<!-- #| fig-width: 4 -->
-<!-- #| fig-height: 4 -->
-
-<!-- data %>% -->
-<!--   count(Gender) %>% -->
-<!--   mutate( -->
-<!--     perc = round(100 * n / sum(n), 1), -->
-<!--     label = paste0(Gender, ": ", perc, "%") -->
-<!--   ) %>% -->
-<!--   ggplot(aes(x = "", y = n, fill = Gender)) + -->
-<!--   geom_col(width = 1, color = "white") + -->
-<!--   coord_polar(theta = "y") + -->
-<!--   geom_text(aes(label = label),  -->
-<!--             position = position_stack(vjust = 0.5),  -->
-<!--             fontface = "bold",  -->
-<!--             size = 5) + -->
-<!--   labs(x = NULL, y = NULL) + -->
-<!--   theme_void() + -->
-<!--   theme( -->
-<!--     legend.position = "none", -->
-<!--     plot.margin = margin(t = 0, r = 0, b = 0, l = 0) -->
-<!--   ) -->
-<!-- ``` -->
-<!-- ::: -->
-
-<!-- :::{.fragment} -->
-<!-- Records with inconsistent value for `gender` were removed.  -->
-<!-- ::: -->
-
-<!-- ::: -->
-<!-- ::: -->
-
-
-
-
-
-
-
-
-
-
-
-<!-- ::: {.columns} -->
-
-<!-- ::: {.column width="30%"} -->
-
-
-<!-- ::: -->
-
-<!-- ::: {.column width="50%"} -->
-<!-- #### Row 2, Col 2 -->
-<!-- More content here -->
-<!-- ::: -->
-
-<!-- ::: -->
 
 ---
 

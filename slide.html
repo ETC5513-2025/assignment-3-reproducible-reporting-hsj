@@ -1008,8 +1008,8 @@ Sia Chawla Chawla,Tran Dang Huy, Jiaqi Xu
 <li><a href="#/page-6" id="/toc-page-6">page 6</a></li>
 <li><a href="#/page-7" id="/toc-page-7">page 7</a></li>
 <li><a href="#/page-8" id="/toc-page-8">page 8</a></li>
-<li><a href="#/page-9" id="/toc-page-9">page 9</a></li>
-<li><a href="#/page-10" id="/toc-page-10">page 10</a></li>
+<li><a href="#/conclusion" id="/toc-conclusion">Conclusion</a></li>
+<li><a href="#/recommendations" id="/toc-recommendations">Recommendations</a></li>
 </ul>
 </nav>
 </section>
@@ -1099,42 +1099,55 @@ $ Entrepreneurship      &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quo
 </div>
 </div>
 </div><div class="column" style="width:35%;">
-<p>Dataset containing categorical, ordinal, and continuous variables.</p>
+<p>Dataset containing categorical, discrete count, and continuous variables.</p>
+<div>
 <ul>
-<li>Demographic</li>
-<li>Academic Performance</li>
-<li>Skills and Experiences</li>
-<li>Career Outcome</li>
+<li class="fragment">Demographic</li>
+<li class="fragment">Academic Performance</li>
+<li class="fragment">Skills and Experiences</li>
+<li class="fragment">Career Outcome</li>
 </ul>
+</div>
+<div class="fragment">
 <p>The outcome, <code>Job_Offers</code>, is a counting variable</p>
+</div>
 </div></div>
 </section>
 <section id="methodology" class="slide level2">
 <h2>Methodology</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
+<div class="fragment">
 <p><strong>Data Exploration</strong>:</p>
 <ul>
-<li>Rows with <code>Gender = &quot;Other&quot;</code> (3.8%) are excluded due to small sample size</li>
+<li>Rows with <code>Gender = &quot;Other&quot;</code> (3.8%) are excluded due to small sample size<br>
+</li>
 </ul>
+</div>
+<div class="fragment">
 <p><strong>Variable Importance</strong>:</p>
 <ul>
 <li><code>Random forest</code> with <code>permutation</code>
 <ul>
 <li>Handles mixed data types<br>
 </li>
-<li>Captures non-linear relationships</li>
+<li>Captures non-linear relationships<br>
+</li>
 </ul></li>
 </ul>
+</div>
+<div class="fragment">
 <p><strong>Direction of Association</strong>:</p>
 <ul>
 <li><code>Boxplot</code> and <code>scatterplot</code>
 <ul>
 <li>Suitable for count data<br>
 </li>
-<li>Show group-wise patterns</li>
+<li>Show group-wise patterns<br>
+</li>
 </ul></li>
 </ul>
+</div>
 </div><div class="column" style="width:30%;">
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -1166,46 +1179,6 @@ Figure 2: Distributions of Outcome Variable
 </div>
 </div>
 </div></div>
-<!-- :::{.fragment} -->
-<!-- ```{r} -->
-<!-- #| label: fig-genderDistribution -->
-<!-- #| fig-cap: "Distribution of Gender" -->
-<!-- #| fig-width: 4 -->
-<!-- #| fig-height: 4 -->
-<!-- data %>% -->
-<!--   count(Gender) %>% -->
-<!--   mutate( -->
-<!--     perc = round(100 * n / sum(n), 1), -->
-<!--     label = paste0(Gender, ": ", perc, "%") -->
-<!--   ) %>% -->
-<!--   ggplot(aes(x = "", y = n, fill = Gender)) + -->
-<!--   geom_col(width = 1, color = "white") + -->
-<!--   coord_polar(theta = "y") + -->
-<!--   geom_text(aes(label = label),  -->
-<!--             position = position_stack(vjust = 0.5),  -->
-<!--             fontface = "bold",  -->
-<!--             size = 5) + -->
-<!--   labs(x = NULL, y = NULL) + -->
-<!--   theme_void() + -->
-<!--   theme( -->
-<!--     legend.position = "none", -->
-<!--     plot.margin = margin(t = 0, r = 0, b = 0, l = 0) -->
-<!--   ) -->
-<!-- ``` -->
-<!-- ::: -->
-<!-- :::{.fragment} -->
-<!-- Records with inconsistent value for `gender` were removed.  -->
-<!-- ::: -->
-<!-- ::: -->
-<!-- ::: -->
-<!-- ::: {.columns} -->
-<!-- ::: {.column width="30%"} -->
-<!-- ::: -->
-<!-- ::: {.column width="50%"} -->
-<!-- #### Row 2, Col 2 -->
-<!-- More content here -->
-<!-- ::: -->
-<!-- ::: -->
 </section>
 <section id="page-6" class="slide level2">
 <h2>page 6</h2>
@@ -1216,11 +1189,46 @@ Figure 2: Distributions of Outcome Variable
 <section id="page-8" class="slide level2">
 <h2>page 8</h2>
 </section>
-<section id="page-9" class="slide level2">
-<h2>page 9</h2>
+<section id="conclusion" class="slide level2">
+<h2>Conclusion</h2>
+<div class="fragment">
+<ul>
+<li>Practical experience and academic performance drive job offers.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Internships and high school GPA are strong predictors.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Field of study, networking, and projects matter—if approached strategically.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Institutional prestige and soft skills had limited impact.</li>
+</ul>
+</div>
 </section>
-<section id="page-10" class="slide level2">
-<h2>page 10</h2>
+<section id="recommendations" class="slide level2">
+<h2>Recommendations</h2>
+<div class="fragment">
+<ul>
+<li><strong>Students</strong> must focus on internships, GPA, and <strong>balanced involvement</strong> in co-curriculars.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><strong>Universities</strong> should embed industry-linked experiences and align programs with job market needs.</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li><strong>Career Services</strong> must promote strategic engagement beyond academics.</li>
+</ul>
+</div>
 
 </section>
     </div>
