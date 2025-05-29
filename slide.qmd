@@ -343,7 +343,7 @@ data_plot_sorted %>%
 -   These two plot shows the distribution of **job offers** from **top 5** important predictors.
 -   Both plots show that the **median** number of **job offers** falls between 2 and 3 for most categories.
 -   Strongest positive signals come from **High-School GPA** and **Internships** because they show a stable increase in average offers as they grow.
--   It is also interesting to see **Art students** are more likely to receive **job offers** compare to **computer science students**.
+-   **Art students** stand out here as they are more likely to receive **job offers** compare to **computer science students**.
 
 ---
 
