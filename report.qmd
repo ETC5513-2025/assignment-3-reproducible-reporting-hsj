@@ -1,10 +1,10 @@
 ---
-title: "Identifying the Student Characteristics That Influence Employment Outcomes"
+title: "Identifying the Student Characteristics that Influence Employment Outcomes"
 author: 
   - name: Sia Chawla Chawla
-    contribution: Exclusive Summary, Discussion
+    contribution: Executive Summary, Discussion
   - name: Tran Dang Huy
-    contribution: Result Interpretations, Reference
+    contribution: Result Interpretations, References
   - name: Jiaqi Xu
     contribution: Methodology, Result Graphics 
 
@@ -70,7 +70,7 @@ To answer this question, we use a kaggle dataset which contains 5,000 records fr
 
 # Methodology {#sec-method}
 
-## data exploration {#sec-dataExplore}
+## Data exploration {#sec-dataExplore}
 
 ```{r}
 data <- read.csv("data/education_career_success.csv")
@@ -81,7 +81,7 @@ data <- read.csv("data/education_career_success.csv")
 sapply(data, n_distinct)
 ```
 
-The data was collected from [Kaggle](https://www.kaggle.com/datasets/adilshamim8/education-and-career-success) and initially contains records for `r nrow(data)` recent university graduates. During our data processing, we found 3.8% (`r sum(data$Gender == "Other")` rows) of the data have inconsistent gender values, as shown in @fig-genderDistribution. Sine this is likely to provide misleading information, we decided to exclude them from further analysis.
+The data was collected from [Kaggle](https://www.kaggle.com/datasets/adilshamim8/education-and-career-success) and initially contains records for `r nrow(data)` recent university graduates. During our data processing, we found 3.8% (`r sum(data$Gender == "Other")` rows) of the data have inconsistent gender values, as shown in @fig-genderDistribution. Since this is likely to provide misleading information, we decided to exclude them from further analysis.
 
 ```{r}
 #| label: fig-genderDistribution
@@ -131,7 +131,7 @@ df <- as.data.frame(t(head(data, 5)))
 knitr::kable(df)
 ```
 
-@fig-outcomeskew shows the distribution of the outcome variable, `Job_Offers`, which represents the number of job offers received. The distribution is relatively balanced across classes, meaning no class dominates the data, and no transformation is required. Furthermore, since `Job_Offers` is ordinal, it emphasis the use of classification model over regression model.
+@fig-outcomeskew shows the distribution of the outcome variable, `Job_Offers`, which represents the number of job offers received. The distribution is relatively balanced across classes, meaning no class dominates the data, and no transformation is required. Furthermore, since `Job_Offers` is ordinal, it emphasises the use of classification model over regression model.
 
 ```{r}
 #| label: fig-outcomeskew
@@ -337,11 +337,11 @@ In conclusion, early career success is most strongly driven by a balance of prac
 
 -   **Students** are encouraged to pursue internships and maintain strong academic performance, particularly during high school, while engaging strategically in networking and project-based activities to avoid diminishing returns from overextension.
 
--   **Higher education institutions** sshould embed structured experiential learning—such as industry placements and capstone projects—into academic programs, and ensure alignment between fields of study and evolving labour market demands.
+-   **Higher education institutions** should embed structured experiential learning—such as industry placements and capstone projects—into academic programs, and ensure alignment between fields of study and evolving labour market demands.
 
 -   **Career development services** should provide targeted support that promotes a balanced portfolio of academic achievement, practical experience, and purposeful co-curricular involvement to optimise graduate employability.
 
-# Reference section {#sec-ref}
+# References  {#sec-ref}
 
 
 
