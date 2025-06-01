@@ -130,5 +130,5 @@ $endif$
 
 % Authors
 
-\author{\sf$for(by-author)${\Large\textbf{$by-author.name.literal$} $if(by-author.contribution)$\\\large $by-author.contribution$$endif$\\[0.5cm]}$endfor$}
+\author{\sf$for(by-author)${\Large\textbf{$by-author.name.literal$} $if(by-author.affiliation)$\\\large $by-author.affiliation$$endif$\\[0.5cm]}$endfor$}
 \lfoot{\sf $for(by-author)$$by-author.name.family$$sep$, $endfor$: $date$}
